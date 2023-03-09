@@ -1,0 +1,80 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.example.tscrcpydroid'
+    compileSdkVersion 33
+    defaultConfig {
+        applicationId "com.example.tscrcpydroid"
+        minSdkVersion 23
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //被这个buildFeature坑了好多遍
+    buildFeatures{
+        aidl true
+        buildConfig true
+    }
+
+    sourceSets {
+        main {
+            aidl.srcDirs = ['src/main/aidl']
+        }
+    }
+
+    //dependsOn就是依赖的其他task, type就是task的父类
+    //这个task把build出来的apk复制到app模块的assets下并且改名为scrcpy-server.jar
+    task copyRelease(dependsOn: 'deleteServer', type: Copy){
+        from file('build/outputs/apk/release/server-release-unsigned.apk')
+        into file('../app/src/main/assets')
+        rename('server-release-unsigned.apk', 'scrcpy-server.jar')
+    }
+
+    task deleteServer(type: Delete){
+        delete "../app/src/main/assets/scrcpy-server.jar"
+    }
+
+
+    task copyDebug (dependsOn: 'deleteServer', type: Copy){
+        from file("build/outputs/apk/debug/server-debug.apk")
+        into file("../app/src/main/assets/")
+        rename('server-debug.apk', 'scrcpy-server.jar')
+    }
+
+    //hook会被调用，分别对应release以及debug时执行的task
+    afterEvaluate {
+        packageRelease.finalizedBy(copyRelease)
+    }
+
+    afterEvaluate {
+        packageDebug.finalizedBy(copyDebug)
+    }
+
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            exclude 'META-INF/DEPENDENCIES'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE.md'
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/NOTICE.txt'
+            exclude 'META-INF/LICENSE-notice.md'
+        }
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}
+
+apply from: "$project.rootDir/config/android-checkstyle.gradle"
