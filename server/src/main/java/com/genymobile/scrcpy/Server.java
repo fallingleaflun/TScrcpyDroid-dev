@@ -4,6 +4,7 @@ import android.graphics.Rect;
 import android.media.MediaCodecInfo;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.util.Log;
 
 import com.example.tscrcpydroid.BuildConfig;
 
@@ -72,7 +73,7 @@ public final class Server {
         boolean control = options.getControl();
         boolean sendDummyByte = options.getSendDummyByte();
 
-        try (AndroidConnection connection = AndroidConnection.open(options.getIp(), options.getPort(), control)) {
+        try (AndroidConnection connection = AndroidConnection.open(options.getIp(), options.getPort(), control, options.getSendDummyByte())) {
             if (options.getSendDeviceMeta()) {
                 Size videoSize = device.getScreenInfo().getVideoSize();
                 connection.sendDeviceMeta(Device.getDeviceName(), videoSize.getWidth(), videoSize.getHeight());
@@ -84,7 +85,6 @@ public final class Server {
             Thread deviceMessageSenderThread = null;
             if (control) {
                 final Controller controller = new Controller(device, connection, options.getClipboardAutosync(), options.getPowerOn());
-
                 // asynchronous
                 controllerThread = startController(controller);
                 deviceMessageSenderThread = startDeviceMessageSender(controller.getSender());
@@ -98,8 +98,10 @@ public final class Server {
             }
 
             try {
+                Ln.d("scrcpy.streamScreen begin");
                 // synchronous
                 screenEncoder.streamScreen(device, connection.getVideoOutputStream());
+                Ln.d("scrcpy.streamScreen end");
             } catch (IOException e) {
                 // this is expected on close
                 Ln.d("Screen streaming stopped");

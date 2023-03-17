@@ -42,11 +42,13 @@ fun TScrcpyDroidNavHost() {
             ShowIPScreen(navController = navController)
         }
         composable(
-            route = NavRoute.ScreenCopyScreen.route+"/{targetIP}/{width}/{height}",
+            route = NavRoute.ScreenCopyScreen.route+"/{targetIP}/{targetPort}/{width}/{height}/{bitRate}",
             arguments = listOf(
                 navArgument("targetIP"){type= NavType.StringType},
+                navArgument("targetPort"){type= NavType.IntType},
                 navArgument("width"){type= NavType.IntType},
-                navArgument("height"){type= NavType.IntType}
+                navArgument("height"){type= NavType.IntType},
+                navArgument("bitRate"){type= NavType.IntType}
             )
         ){
             ScreenCopyScreen(navController = navController)

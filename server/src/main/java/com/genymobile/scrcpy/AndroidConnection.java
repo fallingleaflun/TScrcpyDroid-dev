@@ -66,38 +66,34 @@ public class AndroidConnection implements Closeable {
      * @param port:    本地端口
      * @param control: 是否控制，如果控制就会多开1个socket
      */
-    public static AndroidConnection open(String ip, int port, boolean control) throws IOException {
+    public static AndroidConnection open(String ip, int port, boolean control, boolean sendDummyByte) throws IOException {
+        Socket videoSocket = null;
+        Socket controlSocket = null;
         ServerSocket serverSocket = new ServerSocket(port);
         try {
-            Socket videoSocket = serverSocket.accept();
-            if (videoSocket.getInetAddress().toString().equals(ip)) {
-                try {
-                    if (control) {
-                        Socket controlSocket = serverSocket.accept();
-                        if (controlSocket.getInetAddress().toString().equals(ip)) {
-                            return new AndroidConnection(videoSocket, controlSocket);
-                        } else {
-                            Ln.e("Unknown ip accepted, I will close it");
-                            controlSocket.close();
-                            videoSocket.close();
-                        }
-                    } else {
-                        return new AndroidConnection(videoSocket, null);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    videoSocket.close();
-                }
-            } else {
-                Ln.e("Unknown ip accepted, I will close it");
+            videoSocket = serverSocket.accept();
+            Ln.d("ControlSocket Connection accepted! IP:"+ip);
+            if (sendDummyByte) {
+                // send one byte so the client may read() to detect a connection error
+                videoSocket.getOutputStream().write(114);//测试一下是否就是这个数
+            }
+            if (control) {
+                controlSocket = serverSocket.accept();
+                Ln.d("ControlSocket Connection accepted! IP:"+ip);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            if(videoSocket!=null){
                 videoSocket.close();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            if(controlSocket!=null){
+                controlSocket.close();
+            }
+            throw e;
         } finally {
             serverSocket.close();//accept完serverSocket就可以close了
         }
-        return null;
+        return new AndroidConnection(videoSocket, controlSocket);//两个socket是nullable的
     }
 
     public void close() throws IOException {
@@ -112,6 +108,9 @@ public class AndroidConnection implements Closeable {
     }
 
     public void sendDeviceMeta(String deviceName, int width, int height) throws IOException {
+        Ln.i("device name is:"+deviceName);
+        Ln.i("device width is:"+width);
+        Ln.i("device height is:"+height);
         byte[] buffer = new byte[DEVICE_NAME_FIELD_LENGTH + 4];
 
         byte[] deviceNameBytes = deviceName.getBytes(StandardCharsets.UTF_8);

@@ -26,9 +26,6 @@ fun ScreenCopyScreen(
         AndroidView(
             factory = {
                 viewModel.surfaceViewState.value
-            },
-            update = {
-                TODO()
             }
         )
     }

@@ -187,7 +187,8 @@ fun SettingScreen(
             Button(onClick = {
                 if(viewModel.startControl()==true){
                     navController.navigate(
-                        NavRoute.ScreenCopyScreen.route+"/${state.currentIpAddress}/${state.selectedResolution.width}/${state.selectedResolution.height}"
+                        NavRoute.ScreenCopyScreen.route+
+                                "/${state.currentIpAddress}/${state.currentPort}/${state.selectedResolution.width}/${state.selectedResolution.height}/${state.selectedBitRate.value}"
                     )
                 }
             }) {

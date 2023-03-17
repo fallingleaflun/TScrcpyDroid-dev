@@ -20,16 +20,26 @@ public final class TSIO {
         // not instantiable
     }
 
-    public static void writeFully(OutputStream outputStream, ByteBuffer from) throws IOException {
+    public static void writeFully(OutputStream outputStream, ByteBuffer from) {
         byte[] bytes = new byte[from.remaining()];
         from.get(bytes, 0, bytes.length);
-        outputStream.write(bytes);
-        outputStream.flush();
+        try {
+            outputStream.write(bytes);
+            outputStream.flush();
+        } catch (IOException e) {
+            Ln.e("writeFully fail");
+            throw new RuntimeException(e);
+        }
     }
 
-    public static void writeFully(OutputStream outputStream, byte[] buffer, int offset, int len) throws IOException {
-        outputStream.write(buffer, offset, len);
-        outputStream.flush();
+    public static void writeFully(OutputStream outputStream, byte[] buffer, int offset, int len) {
+        try {
+            outputStream.write(buffer, offset, len);
+            outputStream.flush();
+        } catch (IOException e) {
+            Ln.e("writeFully fail");
+            throw new RuntimeException(e);
+        }
     }
 
     public static String toString(InputStream inputStream) {

@@ -53,13 +53,12 @@ object ConnectionTools {
          * port: server运行的端口
          * max_size: 最大尺寸, 传一个最大的就好，server会自动计算比例
          * bit_rate: 传输bitrate
-         *
-         * CLASSPATH=/data/local/tmp/scrcpy-server.jar app_process / com.genymobile.scrcpy.Server 1.0 ip=192.168.1.192 port=13432 max_size=1920 bit_rate=1M
          */
+        // CLASSPATH=/data/local/tmp/scrcpy-server.jar app_process / com.genymobile.scrcpy.Server 1.0 ip=192.168.1.192 port=13432 max_size=1920 bit_rate=1048576
         val appProcessCommand =
             " CLASSPATH=/data/local/tmp/scrcpy-server.jar " +
             "app_process / com.genymobile.scrcpy.Server 1.0 " +
-            "ip=${localIP} port=${targetPort} max_size=${size} bit_rate=${bitRate.asParam()}\n"
+            "ip=${localIP} port=${targetPort} max_size=${size} bit_rate=${bitRate.asParam()} >> log.txt\n"
 
         status.set(0)
         thread {
@@ -112,6 +111,7 @@ object ConnectionTools {
         }
 
         try {
+            Log.i("ZLT", "trying to connect ${targetIP}:5555")
             sock = Socket(targetIP, 5555) // 这个不是server运行的端口，而是adbd运行的端口
         } catch (e: UnknownHostException) {
             status.set(2)
@@ -128,18 +128,17 @@ object ConnectionTools {
         }
 
         try {
-            sock.apply {
-                adb = AdbConnection.create(this, crypto)
-                adb?.connect(10000, TimeUnit.MILLISECONDS, false)
+            Log.i("ZLT", "trying to create adb connection")
+            adb = AdbConnection.create(sock, crypto)
+            val connected = adb?.connect(100000L, TimeUnit.MILLISECONDS, false)
+            if(connected!=null && !connected){
+                Log.i("ZLT", "create adb connection failed")
+                status.set(2)
+                close(adb, sock)
+                return
             }
-
-            adb?.apply {
-                stream = this.open("shell:")
-            }
-
-            stream?.apply {
-                this.write(" \n");
-            }
+            stream = adb?.open("shell:")
+            stream?.write(" \n");
         } catch (e: IOException) {
             Log.e("ZLT", "test empty fail: ${e}")
             status.set(2)
@@ -163,6 +162,7 @@ object ConnectionTools {
         }
 
         //把用base64加密后的scrcpy-server.jar作为echo命令的参数写到目标设备上
+        Log.i("ZLT", "trying to write server.jar")
         if (stream != null) {
             val filelength = fileBase64.size
             val PARTSIZE = 4056
@@ -208,12 +208,16 @@ object ConnectionTools {
                 return
             }
             try {
-                stream?.write(cmd)
+                Log.i("ZLT", "trying to run server.jar")
+                Log.i("ZLT", cmd)
+                stream.write(cmd)
+                Thread.sleep(100)//没什么必要
             } catch (e: IOException) {
                 Log.e("ZLT", "Run scrcpy-server.jar failed")
                 status.set(2)
-                close(adb, sock)
                 return
+            }finally {
+                //close(adb, sock) 不能close，close的话启动的服务器进程就寄了
             }
             status.set(1)
         }
@@ -229,8 +233,12 @@ object ConnectionTools {
 
     fun close(adb: AdbConnection?, sock: Socket?){
         adb?.close()
-        sock?.shutdownOutput()
-        sock?.close()
+        sock?.apply {
+            if(!this.isClosed()) {
+                this.shutdownOutput()
+                this.close()
+            }
+        }
     }
 }
 

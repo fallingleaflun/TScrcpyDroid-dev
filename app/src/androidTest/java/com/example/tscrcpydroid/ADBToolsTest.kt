@@ -87,9 +87,10 @@ class ADBToolsTest {
             timeOut = 100000
         )
         Assert.assertTrue(result)
-        while (true){
-        }
         //已经测试通过，可以启动server.jar
+        while(true){
+            ;
+        }
     }
 
     @Test
@@ -99,15 +100,15 @@ class ADBToolsTest {
         val context: Context = ApplicationProvider.getApplicationContext()//利用这个在测试类中获取context
         val socket = Socket(targetIP, 5555)
         var crypto: AdbCrypto? = null
-        try {
-            crypto = AdbCrypto.loadAdbKeyPair(
-                AdbBase64Impl,
-                context.getFileStreamPath("pri.key"),
-                context.getFileStreamPath("pub.key")
-            )
-        } catch (e: Exception) {
-            crypto = null
-        }
+        //try {
+        //    crypto = AdbCrypto.loadAdbKeyPair(
+        //        AdbBase64Impl,
+        //        context.getFileStreamPath("pri.key"),
+        //        context.getFileStreamPath("pub.key")
+        //    )
+        //} catch (e: Exception) {
+        //    crypto = null
+        //}
         if (crypto == null) {
             crypto = AdbCrypto.generateAdbKeyPair(
                 AdbBase64Impl

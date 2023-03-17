@@ -20,6 +20,20 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="531079197">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="HUAWEI&#10; AQM-AL10" value="120" />
+                  <entry key="SRK6R20430006105" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="541307405">
           <value>
             <AndroidTestResultsTableState>
@@ -40,8 +54,10 @@
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
                 <map>
+                  <entry key="192.168.1.142:5555" value="120" />
                   <entry key="192.168.1.239:5555" value="120" />
                   <entry key="192.168.180.101:5555" value="120" />
+                  <entry key="5a426e02" value="120" />
                   <entry key="Duration" value="98" />
                   <entry key="Genymobile" value="120" />
                   <entry key="Genymobile&#10; Pixel 3" value="128" />
@@ -63,6 +79,7 @@
                   <entry key="192.168.1.142:5555" value="120" />
                   <entry key="192.168.180.101:5555" value="120" />
                   <entry key="5556" value="120" />
+                  <entry key="5a426e02" value="120" />
                   <entry key="Duration" value="90" />
                   <entry key="Genymobile&#10; Pixel 3" value="120" />
                   <entry key="HUAWEI" value="120" />
@@ -70,6 +87,7 @@
                   <entry key="Pixel_5_API_30" value="120" />
                   <entry key="SRK6R20430006105" value="120" />
                   <entry key="Tests" value="360" />
+                  <entry key="vivo&#10; V1914A" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>

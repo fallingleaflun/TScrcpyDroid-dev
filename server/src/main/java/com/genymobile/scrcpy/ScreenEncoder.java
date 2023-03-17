@@ -9,6 +9,7 @@ import android.media.MediaCodecList;
 import android.media.MediaFormat;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Surface;
 
 import java.io.FileDescriptor;
@@ -28,6 +29,7 @@ public class ScreenEncoder implements Device.RotationListener {
     private static final int DEFAULT_I_FRAME_INTERVAL = 10; // seconds
     private static final int REPEAT_FRAME_DELAY_US = 100_000; // repeat after 100ms
     private static final String KEY_MAX_FPS_TO_ENCODER = "max-fps-to-encoder";
+    private static int configPackageCounter = 0;
 
     // Keep the values in descending order
     private static final int[] MAX_SIZE_FALLBACK = {2560, 1920, 1600, 1280, 1024, 800};
@@ -68,13 +70,14 @@ public class ScreenEncoder implements Device.RotationListener {
     }
 
     public void streamScreen(Device device, OutputStream outputStream) throws IOException {
+        Ln.d("ScreenEncoder.streamScreen begin");
         Workarounds.prepareMainLooper();
         if (Build.BRAND.equalsIgnoreCase("meizu")) {
             // <https://github.com/Genymobile/scrcpy/issues/240>
             // <https://github.com/Genymobile/scrcpy/issues/2656>
             Workarounds.fillAppInfo();
         }
-
+        Ln.i("ScreenEncoder.internalStreamScreen begin");
         internalStreamScreen(device, outputStream);
     }
 
@@ -151,9 +154,10 @@ public class ScreenEncoder implements Device.RotationListener {
     private boolean encode(MediaCodec codec, OutputStream outputStream) throws IOException {
         boolean eof = false;
         MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
-
+        Ln.d("enter encode()");//测试用
         while (!consumeRotationChange() && !eof) {
             int outputBufferId = codec.dequeueOutputBuffer(bufferInfo, -1);
+            Ln.d("outputBufferId obtained: "+outputBufferId);//测试用
             eof = (bufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0;
             try {
                 if (consumeRotationChange()) {
@@ -169,6 +173,7 @@ public class ScreenEncoder implements Device.RotationListener {
                     }
 
                     //IO.writeFully(fd, codecBuffer);//直接写codecBuffer
+                    Ln.d("codecBuffer:"+codecBuffer);
                     TSIO.writeFully(outputStream, codecBuffer);
                     if ((bufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) == 0) {
                         // If this is not a config packet, then it contains a frame
@@ -181,7 +186,7 @@ public class ScreenEncoder implements Device.RotationListener {
                 }
             }
         }
-
+        Ln.d("encode() end");//测试用
         return !eof;
     }
 
@@ -190,6 +195,8 @@ public class ScreenEncoder implements Device.RotationListener {
 
         long pts;
         if ((bufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
+            configPackageCounter++;
+            Ln.d("configPackageCounter:"+configPackageCounter);
             pts = PACKET_FLAG_CONFIG; // non-media data packet
         } else {
             if (ptsOrigin == 0) {
@@ -203,6 +210,8 @@ public class ScreenEncoder implements Device.RotationListener {
 
         headerBuffer.putLong(pts);
         headerBuffer.putInt(packetSize);
+        Ln.d("pts:"+pts);
+        Ln.d("packetSize:"+packetSize);
         headerBuffer.flip();
         //IO.writeFully(fd, headerBuffer);
         TSIO.writeFully(outputStream, headerBuffer);

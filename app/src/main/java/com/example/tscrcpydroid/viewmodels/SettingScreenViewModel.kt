@@ -36,7 +36,7 @@ class SettingScreenViewModel@Inject constructor(
     init {
         val prefs = applicationContext.getSharedPreferences("setting_data", Context.MODE_PRIVATE)
         val ip_address = prefs.getString("ip_address", "")
-        val timeout = prefs.getInt("timeout", 1000)
+        val timeout = prefs.getInt("timeout", 100000)
         val resolution_width = prefs.getInt("resolution_width", 1920)
         val resolution_height = prefs.getInt("resolution_height", 1080)
         val bitrate = prefs.getInt("bitrate", 1*1024*1024)
@@ -203,7 +203,7 @@ class SettingScreenViewModel@Inject constructor(
 data class SettingScreenState(
     val currentIpAddress: String? = null,
     val currentPort: Int = 13432,
-    val currentTimeOut: Int = 10000,
+    val currentTimeOut: Int = 1000000,
     val resolutionMenuExpanded: Boolean = false,
     val selectedResolution: Resolution = Resolution(1080, 1920),
     val bitrateMenuExpanded: Boolean = false,

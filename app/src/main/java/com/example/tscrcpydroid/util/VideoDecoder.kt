@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * 包装了个解码线程
  */
-class VideoDecoder {
+class AnotherVideoDecoder {
     private lateinit var mMediaCodec: MediaCodec
     private var mWorker: Worker? = null
     private var configured = AtomicBoolean(false)
