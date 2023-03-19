@@ -1,9 +1,9 @@
 package com.genymobile.scrcpy;
 
+import android.os.Build;
+
 import com.genymobile.scrcpy.wrappers.ContentProvider;
 import com.genymobile.scrcpy.wrappers.ServiceManager;
-
-import android.os.Build;
 
 import java.io.IOException;
 

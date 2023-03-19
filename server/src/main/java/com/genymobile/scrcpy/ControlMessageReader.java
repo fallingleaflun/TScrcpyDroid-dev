@@ -54,6 +54,7 @@ public class ControlMessageReader {
         int savedPosition = buffer.position();
 
         int type = buffer.get();
+        Ln.d("ControlMessageReader.next() type:"+type);
         ControlMessage msg;
         switch (type) {
             case ControlMessage.TYPE_INJECT_KEYCODE:
@@ -141,6 +142,11 @@ public class ControlMessageReader {
         Position position = readPosition(buffer);
         float pressure = Binary.u16FixedPointToFloat(buffer.getShort());
         int buttons = buffer.getInt();
+        Ln.d("parseInjectTouchEvent action:" + action);
+        Ln.d("parseInjectTouchEvent pointerId:" + pointerId);
+        Ln.d("parseInjectTouchEvent position:" + position);
+        Ln.d("parseInjectTouchEvent pressure:" + pressure);
+        Ln.d("parseInjectTouchEvent buttons:" + buttons);
         return ControlMessage.createInjectTouchEvent(action, pointerId, position, pressure, buttons);
     }
 

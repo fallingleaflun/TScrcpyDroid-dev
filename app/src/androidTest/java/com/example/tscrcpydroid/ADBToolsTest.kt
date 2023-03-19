@@ -1,10 +1,8 @@
 package com.example.tscrcpydroid
 
 import android.content.Context
-import android.content.res.AssetManager
 import android.util.Base64
 import android.util.Log
-import androidx.test.core.app.ActivityScenario.launch
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.tscrcpydroid.data.entities.BitRate
@@ -13,13 +11,9 @@ import com.tananaev.adblib.AdbBase64
 import com.tananaev.adblib.AdbConnection
 import com.tananaev.adblib.AdbCrypto
 import com.tananaev.adblib.AdbStream
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.IOException
 import java.net.Socket
 import java.util.concurrent.TimeUnit
 

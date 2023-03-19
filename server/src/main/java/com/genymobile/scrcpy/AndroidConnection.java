@@ -1,11 +1,6 @@
 package com.genymobile.scrcpy;
 
-import android.net.LocalServerSocket;
-import android.net.LocalSocket;
-import android.util.Log;
-
 import java.io.Closeable;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

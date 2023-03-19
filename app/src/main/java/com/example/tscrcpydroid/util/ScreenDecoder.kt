@@ -8,14 +8,11 @@ import android.media.MediaFormat
 import android.util.Log
 import android.view.Surface
 import com.example.tscrcpydroid.data.entities.BitRate
-import com.example.tscrcpydroid.data.entities.Resolution
 import java.io.DataInputStream
 import java.io.IOException
-import java.io.InputStream
 import java.nio.ByteBuffer
 import java.util.Arrays
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.concurrent.thread
 
 /**
  * 包括两个线程
@@ -38,8 +35,10 @@ class ScreenDecoder(
     private val DEVICE_NAME_FIELD_LENGTH = 64
 
     private var targetDeviceName = "homo"
-    private var targetWidth = -114514
-    private var targetHeight = -114514
+    var targetWidth = -114514
+        get() = field
+    var targetHeight = -114514
+        get() = field
 
     private val ptsBuffer = ByteArray(8)
     private val lenBuffer = ByteArray(4)
@@ -135,8 +134,8 @@ class ScreenDecoder(
                     Log.e("ZLT", "broken video package size")
                     Log.e("ZLT", "buffer read:${r}bytes")
                 }
-                val pts = byteToLong(ptsBuffer)
-                val len = byteToInt(lenBuffer)
+                val pts = ptsBuffer.toLong()
+                val len = lenBuffer.toInt()
 
                 Log.d("ZLT", "pts:${pts}\nlen:${len}")
 
@@ -195,12 +194,22 @@ class ScreenDecoder(
                         flag = MediaCodec.BUFFER_FLAG_KEY_FRAME
                     }
                     if (isConfigured.get()) {//已经配置好了，可以开始解码
-                        val inputBufferIndex = mCodec.dequeueInputBuffer(-1)
-                        if (inputBufferIndex >= 0) {
-                            val inputBuffer = mCodec.getInputBuffer(inputBufferIndex)
-                            inputBuffer?.clear()
-                            inputBuffer?.put(dataBuffer)
-                            mCodec.queueInputBuffer(inputBufferIndex,0, dataBuffer.size, realPts, flag)
+                        try {
+                            val inputBufferIndex = mCodec.dequeueInputBuffer(-1)
+                            if (inputBufferIndex >= 0) {
+                                val inputBuffer = mCodec.getInputBuffer(inputBufferIndex)
+                                inputBuffer?.clear()
+                                inputBuffer?.put(dataBuffer)
+                                mCodec.queueInputBuffer(
+                                    inputBufferIndex,
+                                    0,
+                                    dataBuffer.size,
+                                    realPts,
+                                    flag
+                                )
+                            }
+                        } catch (e: Exception){
+                            Log.e("ZLT", "${e.stackTrace}")
                         }
                     }
                 }
@@ -225,7 +234,7 @@ class ScreenDecoder(
             Log.e("ZLT", e.stackTraceToString())
             Log.i("ZLT", "readDeviceMetaData read width failed")
         }
-        targetWidth = byteToInt(widthBuffer)
+        targetWidth = widthBuffer.toInt()
 
         val heightBuffer = ByteArray(4)
         try {
@@ -235,7 +244,7 @@ class ScreenDecoder(
             Log.i("ZLT", "readDeviceMetaData read height failed")
 
         }
-        targetHeight = byteToInt(heightBuffer)
+        targetHeight = heightBuffer.toInt()
 
         Log.i(
             "ZLT", "readDeviceMetaData:\n" +
@@ -252,18 +261,22 @@ class ScreenDecoder(
         val bufferInfo = BufferInfo()
         while (running.get()) {
             if (isConfigured.get()) {
-                val outputBufferIndex = mCodec.dequeueOutputBuffer(bufferInfo, -1)
-                if (outputBufferIndex >= 0) {
-                    val outputBuffer = mCodec.getOutputBuffer(outputBufferIndex)
-                    //
-                    //如果需要某一帧进行字节上的处理，可在此对outputBuffer进行处理
-                    //
-                    mCodec.releaseOutputBuffer(outputBufferIndex, true)
-                    val eof = (bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0
-                    if (eof) {
-                        this.stop()
-                        break
+                try {
+                    val outputBufferIndex = mCodec.dequeueOutputBuffer(bufferInfo, -1)
+                    if (outputBufferIndex >= 0) {
+                        val outputBuffer = mCodec.getOutputBuffer(outputBufferIndex)
+                        //
+                        //如果需要某一帧进行字节上的处理，可在此对outputBuffer进行处理
+                        //
+                        mCodec.releaseOutputBuffer(outputBufferIndex, true)
+                        val eof = (bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0
+                        if (eof) {
+                            this.stop()
+                            break
+                        }
                     }
+                }catch (e: Exception){
+                    Log.e("ZLT", "${e.stackTrace}")
                 }
             } else {//等待配置
                 Thread.sleep(10)

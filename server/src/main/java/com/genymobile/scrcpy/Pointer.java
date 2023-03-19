@@ -9,6 +9,9 @@ public class Pointer {
 
     /**
      * Local pointer id, using the lowest possible values to fill the {@link android.view.MotionEvent.PointerProperties PointerProperties}.
+     * 传过来的是long，但是安卓的pointerId是int
+     * 以及传过来的是控制端的id，可能和受控端的id不一样，需要处理一个映射
+     * 实际是造了一个List存放(PointersState.pointers)，我觉得很奇怪，为什么不用set而是用list
      */
     private final int localId;
 

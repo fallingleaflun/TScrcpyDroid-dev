@@ -1,8 +1,9 @@
 package com.genymobile.scrcpy;
 
+import android.view.Display;
+
 import com.genymobile.scrcpy.wrappers.DisplayManager;
 
-import android.view.Display;
 import org.junit.Assert;
 import org.junit.Test;
 

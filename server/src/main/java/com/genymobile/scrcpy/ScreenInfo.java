@@ -165,4 +165,14 @@ public final class ScreenInfo {
         }
         return (lockedVideoOrientation + 4 - deviceRotation) % 4;
     }
+
+    @Override
+    public String toString() {
+        return "ScreenInfo{" +
+                "contentRect=" + contentRect +
+                ", unlockedVideoSize=" + unlockedVideoSize +
+                ", deviceRotation=" + deviceRotation +
+                ", lockedVideoOrientation=" + lockedVideoOrientation +
+                '}';
+    }
 }

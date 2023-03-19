@@ -1,11 +1,11 @@
 package com.genymobile.scrcpy.wrappers;
 
+import android.view.Display;
+
 import com.genymobile.scrcpy.Command;
 import com.genymobile.scrcpy.DisplayInfo;
 import com.genymobile.scrcpy.Ln;
 import com.genymobile.scrcpy.Size;
-
-import android.view.Display;
 
 import java.lang.reflect.Field;
 import java.util.regex.Matcher;

@@ -45,6 +45,17 @@
   - `Gradle.taskGraph.afterTask()`
   - `Gradle.buildFinish()`
 
+## 各种Size
+- DisplayInfo.size: 屏幕的大小
+- Device.deviceSize: 同上，是屏幕的大小
+- maxSize: 客户端传的值
+- clientVideoSize
+- screnInfo: 包括很多信息
+  - contentRect: 设备大小(有可能被crop过)
+  - unlockedVideoSize: 视频大小(小于等于设备大小)，已考虑方向(对于固定方向时不适用)
+  - deviceRotation: 与受控设备的方向相关
+  - lockedVideoOrientation: (-1: 不固定, 0: 正常, 1: 逆时针90°, 2: 180°, 3: 顺时针90°)
+
 ## TODO
 1. server添加参数ip以及port的参数解析 (完成
 2. server的connection连接到localsocket -> 连接到ip:port的socket （完成
@@ -52,7 +63,10 @@
 4. app启动一个service(完成
 5. service开启socket连接到targetip:port(完成
 6. 读懂server端的视频流的字节流协议格式(完成
-7. service通过socket的输入流接受视频流
-8. service通过解码器把视频流解码并渲染到surfaceView上
-9.  读懂server段的控制事件的字节流协议格式
-10. service通过socket的输出流发送控制事件
+7. service通过socket的输入流接受视频流(完成
+8. service通过解码器把视频流解码并渲染到surfaceView上(完成
+9.  读懂server段的控制事件的字节流协议格式(完成
+10. service通过socket的输出流发送控制事件(完成
+11. 出现bug`[server] WARN: Ignore touch event, it was generated for a different device size`，需要搞清楚各种size的关系
+
+

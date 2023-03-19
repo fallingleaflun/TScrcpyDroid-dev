@@ -4,7 +4,6 @@ import android.graphics.Rect;
 import android.media.MediaCodecInfo;
 import android.os.BatteryManager;
 import android.os.Build;
-import android.util.Log;
 
 import com.example.tscrcpydroid.BuildConfig;
 
@@ -75,7 +74,7 @@ public final class Server {
 
         try (AndroidConnection connection = AndroidConnection.open(options.getIp(), options.getPort(), control, options.getSendDummyByte())) {
             if (options.getSendDeviceMeta()) {
-                Size videoSize = device.getScreenInfo().getVideoSize();
+                Size videoSize = device.getScreenInfo().getVideoSize();//向控制端发送受控端的videoSize
                 connection.sendDeviceMeta(Device.getDeviceName(), videoSize.getWidth(), videoSize.getHeight());
             }
             ScreenEncoder screenEncoder = new ScreenEncoder(options.getSendFrameMeta(), options.getBitRate(), options.getMaxFps(), codecOptions,

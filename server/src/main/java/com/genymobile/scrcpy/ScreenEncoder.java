@@ -1,7 +1,5 @@
 package com.genymobile.scrcpy;
 
-import com.genymobile.scrcpy.wrappers.SurfaceControl;
-
 import android.graphics.Rect;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
@@ -9,16 +7,13 @@ import android.media.MediaCodecList;
 import android.media.MediaFormat;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.Surface;
 
-import java.io.FileDescriptor;
+import com.genymobile.scrcpy.wrappers.SurfaceControl;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.Channel;
-import java.nio.channels.Channels;
-import java.nio.channels.WritableByteChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -92,7 +87,7 @@ public class ScreenEncoder implements Device.RotationListener {
                 ScreenInfo screenInfo = device.getScreenInfo();
                 Rect contentRect = screenInfo.getContentRect();
                 // include the locked video orientation
-                Rect videoRect = screenInfo.getVideoSize().toRect();
+                Rect videoRect = screenInfo.getVideoSize().toRect();//传的视频流大小就是这么大
                 // does not include the locked video orientation
                 Rect unlockedVideoRect = screenInfo.getUnlockedVideoSize().toRect();
                 int videoRotation = screenInfo.getVideoRotation();
@@ -154,10 +149,10 @@ public class ScreenEncoder implements Device.RotationListener {
     private boolean encode(MediaCodec codec, OutputStream outputStream) throws IOException {
         boolean eof = false;
         MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
-        Ln.d("enter encode()");//测试用
+        //Ln.d("enter encoderName()");//测试用
         while (!consumeRotationChange() && !eof) {
             int outputBufferId = codec.dequeueOutputBuffer(bufferInfo, -1);
-            Ln.d("outputBufferId obtained: "+outputBufferId);//测试用
+            //Ln.d("outputBufferId obtained: "+outputBufferId);//测试用
             eof = (bufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0;
             try {
                 if (consumeRotationChange()) {
@@ -173,7 +168,7 @@ public class ScreenEncoder implements Device.RotationListener {
                     }
 
                     //IO.writeFully(fd, codecBuffer);//直接写codecBuffer
-                    Ln.d("codecBuffer:"+codecBuffer);
+                    //Ln.d("codecBuffer:"+codecBuffer);
                     TSIO.writeFully(outputStream, codecBuffer);
                     if ((bufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) == 0) {
                         // If this is not a config packet, then it contains a frame
@@ -196,7 +191,7 @@ public class ScreenEncoder implements Device.RotationListener {
         long pts;
         if ((bufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
             configPackageCounter++;
-            Ln.d("configPackageCounter:"+configPackageCounter);
+            //Ln.d("configPackageCounter:"+configPackageCounter);
             pts = PACKET_FLAG_CONFIG; // non-media data packet
         } else {
             if (ptsOrigin == 0) {
@@ -210,8 +205,8 @@ public class ScreenEncoder implements Device.RotationListener {
 
         headerBuffer.putLong(pts);
         headerBuffer.putInt(packetSize);
-        Ln.d("pts:"+pts);
-        Ln.d("packetSize:"+packetSize);
+        //Ln.d("pts:"+pts);
+        //Ln.d("packetSize:"+packetSize);
         headerBuffer.flip();
         //IO.writeFully(fd, headerBuffer);
         TSIO.writeFully(outputStream, headerBuffer);
@@ -304,7 +299,7 @@ public class ScreenEncoder implements Device.RotationListener {
     }
 
     /**
-     * 截图操作
+     * 截图操作，并且通过投影变换把原始分辨率的截图转变为符合videoSize的截图
      */
     private static void setDisplaySurface(IBinder display, Surface surface, int orientation, Rect deviceRect, Rect displayRect, int layerStack) {
         SurfaceControl.openTransaction();

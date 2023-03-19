@@ -1,10 +1,10 @@
 package com.genymobile.scrcpy.wrappers;
 
-import com.genymobile.scrcpy.Ln;
-
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.IInterface;
+
+import com.genymobile.scrcpy.Ln;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

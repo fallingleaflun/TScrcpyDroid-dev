@@ -179,4 +179,25 @@ public final class ControlMessage {
     public long getSequence() {
         return sequence;
     }
+
+    @Override
+    public String toString() {
+        return "ControlMessage{" +
+                "type=" + type +
+                ", text='" + text + '\'' +
+                ", metaState=" + metaState +
+                ", action=" + action +
+                ", keycode=" + keycode +
+                ", buttons=" + buttons +
+                ", pointerId=" + pointerId +
+                ", pressure=" + pressure +
+                ", position=" + position +
+                ", hScroll=" + hScroll +
+                ", vScroll=" + vScroll +
+                ", copyKey=" + copyKey +
+                ", paste=" + paste +
+                ", repeat=" + repeat +
+                ", sequence=" + sequence +
+                '}';
+    }
 }

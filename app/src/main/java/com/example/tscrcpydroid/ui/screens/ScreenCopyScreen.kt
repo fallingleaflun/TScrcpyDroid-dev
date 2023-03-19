@@ -1,6 +1,5 @@
 package com.example.tscrcpydroid.ui.screens
 
-import android.view.SurfaceView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

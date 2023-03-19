@@ -1,11 +1,5 @@
 package com.genymobile.scrcpy;
 
-import com.genymobile.scrcpy.wrappers.ClipboardManager;
-import com.genymobile.scrcpy.wrappers.InputManager;
-import com.genymobile.scrcpy.wrappers.ServiceManager;
-import com.genymobile.scrcpy.wrappers.SurfaceControl;
-import com.genymobile.scrcpy.wrappers.WindowManager;
-
 import android.content.IOnPrimaryClipChangedListener;
 import android.graphics.Rect;
 import android.os.Build;
@@ -16,6 +10,12 @@ import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
+
+import com.genymobile.scrcpy.wrappers.ClipboardManager;
+import com.genymobile.scrcpy.wrappers.InputManager;
+import com.genymobile.scrcpy.wrappers.ServiceManager;
+import com.genymobile.scrcpy.wrappers.SurfaceControl;
+import com.genymobile.scrcpy.wrappers.WindowManager;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -78,6 +78,7 @@ public final class Device {
         screenInfo = ScreenInfo.computeScreenInfo(displayInfo.getRotation(), deviceSize, crop, maxSize, lockVideoOrientation);
         layerStack = displayInfo.getLayerStack();
 
+        //使用这个API注册AIDL回到监听RotationWatcher以监听旋转并通知回调函数
         ServiceManager.getWindowManager().registerRotationWatcher(new IRotationWatcher.Stub() {
             @Override
             public void onRotationChanged(int rotation) {
@@ -146,7 +147,6 @@ public final class Device {
         // it hides the field on purpose, to read it with a lock
         @SuppressWarnings("checkstyle:HiddenField")
         ScreenInfo screenInfo = getScreenInfo(); // read with synchronization
-
         // ignore the locked video orientation, the events will apply in coordinates considered in the physical device orientation
         Size unlockedVideoSize = screenInfo.getUnlockedVideoSize();
 
@@ -158,6 +158,10 @@ public final class Device {
         if (!unlockedVideoSize.equals(clientVideoSize)) {
             // The client sends a click relative to a video with wrong dimensions,
             // the device may have been rotated since the event was generated, so ignore the event
+            // 生成一个event之后可能会旋转过
+            Ln.d("screenInfo:"+screenInfo);
+            Ln.d("unlockedVideoSize:"+unlockedVideoSize);
+            Ln.d("clientVideoSize:"+clientVideoSize);
             return null;
         }
         Rect contentRect = screenInfo.getContentRect();

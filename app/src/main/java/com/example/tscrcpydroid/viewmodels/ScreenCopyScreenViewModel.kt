@@ -1,13 +1,12 @@
 package com.example.tscrcpydroid.viewmodels
 
-import android.app.ActivityManager
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.view.SurfaceView
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.tscrcpydroid.ListenService
@@ -46,14 +45,18 @@ class ScreenCopyScreenViewModel @Inject constructor(
         bitRate = BitRate(savedStateHandle.get<Int>("bitRate")!!)
         val serviceConnection =
             object : ServiceConnection {
+                @SuppressLint("ClickableViewAccessibility")
                 override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                     service as ListenService.ListenBinder
                     val listenService = service.getService()
                     if (firstTime) {
-                        listenService.start(_surfaceView.holder.surface, targetIP, targetPort, resolution, bitRate)
+                        listenService.start(
+                            _surfaceView, targetIP, targetPort,
+                            resolution, bitRate)
                         //完全就是在破坏MVVM
                         _surfaceView.setOnTouchListener { v, event ->
                             listenService.onTouchEvent(event)
+                            //v.performClick()//其实没必要click
                         }
                     } else {
                         TODO()

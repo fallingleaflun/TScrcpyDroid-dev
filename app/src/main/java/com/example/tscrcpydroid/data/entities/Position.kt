@@ -1,8 +1,10 @@
 package com.example.tscrcpydroid.data.entities
 
-import com.example.tscrcpydroid.data.entities.Point
 import java.util.Objects
 
+/**
+ * Position必须要附带屏幕大小，不然得自己手动转换，以及旋转可能会有点难处理
+ */
 class Position(val point: Point, screenSize: Size) {
     private val screenSize: Size
 
@@ -13,8 +15,7 @@ class Position(val point: Point, screenSize: Size) {
     constructor(x: Int, y: Int, screenWidth: Int, screenHeight: Int) : this(
         Point(x, y),
         Size(screenWidth, screenHeight)
-    ) {
-    }
+    )
 
     fun getScreenSize(): Size {
         return screenSize

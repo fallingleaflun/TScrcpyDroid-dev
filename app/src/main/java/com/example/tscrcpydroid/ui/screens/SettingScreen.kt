@@ -46,10 +46,11 @@ fun SettingScreen(
     val state by viewModel.state.collectAsState()
     val resolutionList = remember {
         listOf(
-            Resolution(1920, 1080),
-            Resolution(1280, 720),
-            Resolution(854, 480),
-            Resolution(800, 480),
+            Resolution(1440, 2560),
+            Resolution(1080, 1920),
+            Resolution(720, 1280),
+            Resolution(768, 1280),
+            Resolution(480, 800),
         )
     }
     val bitrateList = remember {

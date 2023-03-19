@@ -1,8 +1,8 @@
 package com.genymobile.scrcpy.wrappers;
 
-import com.genymobile.scrcpy.Ln;
-
 import android.view.InputEvent;
+
+import com.genymobile.scrcpy.Ln;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

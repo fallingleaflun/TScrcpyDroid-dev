@@ -1,7 +1,6 @@
 package com.example.tscrcpydroid
 
 import android.content.Context
-import android.content.res.AssetManager
 import android.media.MediaCodec
 import android.media.MediaCodec.BufferInfo
 import android.util.Base64
@@ -10,14 +9,13 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.tscrcpydroid.data.entities.BitRate
 import com.example.tscrcpydroid.util.ConnectionTools.startRemoteServer
-import com.example.tscrcpydroid.util.byteToInt
-import com.example.tscrcpydroid.util.byteToLong
+import com.example.tscrcpydroid.util.toInt
+import com.example.tscrcpydroid.util.toLong
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 import java.net.Socket
-import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class ConnectionPackageTest {
@@ -76,8 +74,8 @@ class ConnectionPackageTest {
                         if(r<8){
                             Log.e("ZLT", "broken video package size")
                         }
-                        val pts = byteToLong(ptsBuffer)
-                        val len = byteToInt(lenBuffer)
+                        val pts = ptsBuffer.toLong()
+                        val len = lenBuffer.toInt()
 
                         //获取包的主体部分
                         val dataBuffer = ByteArray(len)

@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.tscrcpydroid.R
@@ -17,7 +16,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.lang.Integer.max
-import java.lang.NumberFormatException
 import javax.inject.Inject
 
 /**

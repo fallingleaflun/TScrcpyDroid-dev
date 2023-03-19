@@ -8,18 +8,14 @@ import com.tananaev.adblib.AdbBase64
 import com.tananaev.adblib.AdbConnection
 import com.tananaev.adblib.AdbCrypto
 import com.tananaev.adblib.AdbStream
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.net.ConnectException
 import java.net.Socket
 import java.net.UnknownHostException
 import java.nio.charset.StandardCharsets
-import java.security.NoSuchAlgorithmException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
-import kotlin.jvm.Throws
 
 
 /**

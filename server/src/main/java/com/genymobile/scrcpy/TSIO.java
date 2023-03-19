@@ -1,13 +1,5 @@
 package com.genymobile.scrcpy;
 
-import android.system.ErrnoException;
-import android.system.Os;
-import android.system.OsConstants;
-
-import com.example.tscrcpydroid.BuildConfig;
-
-import java.io.DataOutputStream;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
