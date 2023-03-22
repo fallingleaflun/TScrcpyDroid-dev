@@ -1,5 +1,5 @@
 # TScrcpyDroid-dev
-This is a client app for scrcpy written in Kotlin.
+This is a client app for scrcpy written in Kotlin.Both Compose and SurfaceView are used.
 ## Usage
 1. Enable Developer options on the server device(the Android device to be controlled).
 2. Enbale USB debug.
@@ -11,3 +11,6 @@ adb tcpip 5555
 5. Input the server device's IP and Port.
 6. Configure options such as resolution and BitRate.
 7. start!
+
+## Preview
+![Screenshot_20230322_200821_com example tscrcpydroid](https://user-images.githubusercontent.com/32243069/226901022-1a01f76b-dff9-4d9c-8698-d6ac01558c85.jpg)
