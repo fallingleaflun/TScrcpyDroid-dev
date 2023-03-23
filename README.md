@@ -7,7 +7,7 @@ This is a client app for scrcpy written in Kotlin.Both Compose and SurfaceView a
 ```shell
 adb tcpip 5555
 ```
-4. Install the app on the client device(the Android device).
+4. Install the app on the client device(Another Android device).
 5. Input the server device's IP and Port.
 6. Configure options such as resolution and BitRate.
 7. start!
