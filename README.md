@@ -13,4 +13,8 @@ adb tcpip 5555
 7. start!
 
 ## Preview
-<img src="https://user-images.githubusercontent.com/32243069/226901022-1a01f76b-dff9-4d9c-8698-d6ac01558c85.jpg" width="300">
+- Please refer to `Sample.mp4`
+
+- Configure page:
+
+  <img src="https://user-images.githubusercontent.com/32243069/226901022-1a01f76b-dff9-4d9c-8698-d6ac01558c85.jpg" width="300">
