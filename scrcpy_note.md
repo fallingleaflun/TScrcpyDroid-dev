@@ -70,3 +70,6 @@
 11. 出现bug`[server] WARN: Ignore touch event, it was generated for a different device size`，需要搞清楚各种size的关系
 
 
+## Problems
+原来的c客户端用的是ffmpeg能够处理乱序，我直接使用mediacodec进行解码的时候没有考虑到这一点，后续需要改为使用ffmpeg处理
+
